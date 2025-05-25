@@ -1,0 +1,16 @@
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/responses/BasicResponse.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/GlobalExceptionHandler.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/repository/UserRepository.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/SecurityConfig.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/TestConfig.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/service/Persist.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/RestExceptionHandler.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/AppConfig.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/utils/Constants.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/utils/Errors.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/Main.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/service/UserService.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/controllers/GeneralController.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/CorsConfig.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/entities/UserEntity.java
+/Users/naama/IdeaProjects/mamaTrack_back/src/main/java/com/ashcollege/utils/DbUtils.java

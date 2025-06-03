@@ -19,7 +19,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 // פתוח:
-                .antMatchers("/api/register", "/api/login").permitAll()
+                .antMatchers("/api/register", "/api/login", "/api/checklist/**").permitAll()
+
                 // נתיבים למנהלים בלבד:
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
                 // כל שאר הנתיבים דורשים התחברות (כלשהי)

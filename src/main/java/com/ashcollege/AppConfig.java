@@ -1,10 +1,8 @@
 package com.ashcollege;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
@@ -49,11 +47,19 @@ public class AppConfig {
     }
 
     @Bean
-    @Primary
-    public SessionFactory sessionFactory(EntityManagerFactory emf) {
-        return emf.unwrap(SessionFactory.class);
+    public LocalSessionFactoryBean sessionFactory() throws Exception {
+        LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
+        sessionFactoryBean.setDataSource(dataSource());
+        Properties hibernateProperties = new Properties();
+        hibernateProperties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
+        hibernateProperties.put("hibernate.hbm2ddl.auto", "update");
+        hibernateProperties.put("hibernate.jdbc.batch_size", 50);
+        hibernateProperties.put("hibernate.connection.characterEncoding", "utf8");
+        hibernateProperties.put("hibernate.enable_lazy_load_no_trans", "true");
+        sessionFactoryBean.setHibernateProperties(hibernateProperties);
+        sessionFactoryBean.setMappingResources("objects.hbm.xml");
+        return sessionFactoryBean;
     }
-
 
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {

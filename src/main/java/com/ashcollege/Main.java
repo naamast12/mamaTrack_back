@@ -12,14 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import java.util.Arrays;
-
-@SpringBootApplication
-@ComponentScan(basePackages = {"com.ashcollege", "com.ashcollege.controllers"})
-
-
+@SpringBootApplication(exclude = HibernateJpaAutoConfiguration.class)
 @EnableScheduling
-
 
 public class Main {
     public static boolean applicationStarted = false;
@@ -34,9 +28,6 @@ public class Main {
         applicationStarted = true;
         startTime = System.currentTimeMillis();
 
-
-        }
-
     }
 
-
+}

@@ -96,6 +96,7 @@ public class GeneralController {
             return errorResponse("המשתמש לא נמצא", HttpStatus.NOT_FOUND);
         }
 
+
         System.out.println(user);  // הדפסת אובייקט המשתמש
 
         Map<String, Object> response = new HashMap<>();

@@ -3,6 +3,7 @@ package com.ashcollege.controllers;
 import com.ashcollege.entities.UserEntity;
 import com.ashcollege.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,12 @@ import java.util.*;
 
 @RestController
 public class GeneralController {
+
+    @Value("${app.jwt.secret}")
+    private String secret;
+
+    @Value("${app.jwt.expiration-days}")
+    private long expirationDays;
 
     @Autowired
     private UserService userService;

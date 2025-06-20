@@ -9,7 +9,6 @@ com/ashcollege/Main.class
 com/ashcollege/utils/Constants.class
 com/ashcollege/SecurityConfig.class
 com/ashcollege/service/UserService.class
-com/ashcollege/AppConfig.class
 com/ashcollege/utils/Errors.class
 com/ashcollege/utils/DbUtils.class
 com/ashcollege/responses/BasicResponse.class

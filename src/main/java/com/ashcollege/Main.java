@@ -1,21 +1,20 @@
 package com.ashcollege;
 
-import com.ashcollege.service.Persist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication(exclude = HibernateJpaAutoConfiguration.class)
+import com.ashcollege.service.Persist;
+
+@SpringBootApplication
 @EnableScheduling
 
 public class Main {
+
+
     public static boolean applicationStarted = false;
     private static final Logger LOGGER = LoggerFactory.getLogger(Persist.class);
 
@@ -23,6 +22,9 @@ public class Main {
 
 
     public static void main(String[] args) {
+        System.out.println("ENV DATABASE_URL = " + System.getenv("SPRING_DATASOURCE_URL"));
+        System.out.println("ENV DB_USER      = " + System.getenv("SPRING_DATASOURCE_USERNAME"));
+        System.out.println("ENV DB_PASS      = " + System.getenv("SPRING_DATASOURCE_PASSWORD"));
         ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
         LOGGER.info("Application started.");
         applicationStarted = true;

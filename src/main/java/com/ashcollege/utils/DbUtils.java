@@ -1,15 +1,10 @@
 package com.ashcollege.utils;
 
-
-
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.ashcollege.utils.Constants.SCHEMA;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 @Component
 public class DbUtils {
@@ -18,22 +13,21 @@ public class DbUtils {
 
     @PostConstruct
     public void init () {
-        createDbConnection(Constants.DB_USERNAME, Constants.DB_PASSWORD);
+        createDbConnection();
     }
 
-    private void createDbConnection(String username, String password){
+    private void createDbConnection(){
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/"+SCHEMA, username, password);
-            System.out.println("Connection successful!");
-            System.out.println();
-        }catch (Exception e){
-            System.out.println("Cannot create DB connection!");
+            Class.forName("org.postgresql.Driver");
+            String url = System.getenv("SPRING_DATASOURCE_URL");
+            String username = System.getenv("SPRING_DATASOURCE_USERNAME");
+            String password = System.getenv("SPRING_DATASOURCE_PASSWORD");
+
+            connection = DriverManager.getConnection(url, username, password);
+            System.out.println("✅ Connection successful to Supabase!");
+        } catch (Exception e){
+            System.out.println("❌ Cannot create DB connection!");
+            e.printStackTrace();
         }
     }
-
-
-
-
-
 }

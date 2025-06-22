@@ -71,7 +71,21 @@ public class GeneralController {
             SecurityContextHolder.getContext().setAuthentication(auth);
             request.getSession(true).setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
-            return successResponse("המשתמש התחבר בהצלחה");
+            // Build user data for response
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("id", foundUser.getId());
+            userData.put("firstName", foundUser.getFirstName());
+            userData.put("lastName", foundUser.getLastName());
+            userData.put("mail", foundUser.getMail());
+            userData.put("lastPeriodDate", foundUser.getLastPeriodDate());
+            userData.put("estimatedDueDate", foundUser.getEstimatedDueDate());
+            userData.put("pregnancyWeek", foundUser.getPregnancyWeek());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "המשתמש התחבר בהצלחה");
+            response.put("user", userData);
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             return errorResponse("שגיאה בכניסה: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

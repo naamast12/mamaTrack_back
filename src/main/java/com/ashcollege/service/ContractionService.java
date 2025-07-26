@@ -6,9 +6,9 @@ import com.ashcollege.responses.ContractionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -28,12 +28,13 @@ public class ContractionService {
         entity.setEndTime(dto.getEndTime());
         entity.setDurationSeconds(dto.getDurationSeconds());
         entity.setCreatedAt(LocalDateTime.now());
+
         ContractionEntity saved = contractionRepository.save(entity);
 
         boolean shouldGo = shouldGoToHospital(dto.getUserId());
         System.out.println("🚗 shouldGoToHospital = " + shouldGo);
 
-        return toDto(saved); // אפשר להחזיר גם את shouldGo יחד עם ה־DTO אם רוצים
+        return toDto(saved);
     }
 
     public List<ContractionDto> getContractionsByUserId(Long userId) {
@@ -51,6 +52,7 @@ public class ContractionService {
                 entity.getCreatedAt()
         );
     }
+
     public boolean shouldGoToHospital(Long userId) {
         List<ContractionEntity> recent = contractionRepository.findByUserIdOrderByStartTimeDesc(userId);
         if (recent.size() < 4) return false;
@@ -69,6 +71,7 @@ public class ContractionService {
                 break;
             }
         }
+
         long totalSpan = java.time.Duration.between(
                 lastFour.get(3).getStartTime(),
                 lastFour.get(0).getStartTime()
@@ -78,8 +81,8 @@ public class ContractionService {
         return allLong && allIntervalsOk && timeSpanOk;
     }
 
+    @Transactional
     public void deleteAllByUserId(Long userId) {
         contractionRepository.deleteByUserId(userId);
     }
-
-} 
+}

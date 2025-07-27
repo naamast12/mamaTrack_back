@@ -20,6 +20,7 @@ public class ContractionController {
     private final ContractionService contractionService;
     private final UserService userService;
 
+
     @Autowired
     public ContractionController(ContractionService contractionService, UserService userService) {
         this.contractionService = contractionService;

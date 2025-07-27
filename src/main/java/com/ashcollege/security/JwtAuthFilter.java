@@ -27,6 +27,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Value("${app.jwt.secret}")
     private String secretKey;
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        String method = request.getMethod();
+
+        // שחרור preflight של CORS
+        if ("OPTIONS".equalsIgnoreCase(method)) return true;
+
+        return path.equals("/") ||
+                path.equals("/error") ||
+                path.startsWith("/api/login") ||
+                path.startsWith("/api/register") ||
+                // כל ה-GET תחת /api/tests פתוחים
+                ("GET".equalsIgnoreCase(method) && path.startsWith("/api/tests"));
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

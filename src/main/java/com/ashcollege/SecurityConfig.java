@@ -32,13 +32,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors().and()
                 .csrf().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
-
-                .antMatchers("/api/register", "/api/login", "/").permitAll()
+                .antMatchers("/", "/error").permitAll()
+                .antMatchers("/api/register", "/api/login").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/tests/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().disable();
@@ -53,4 +53,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

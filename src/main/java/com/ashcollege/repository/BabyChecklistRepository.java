@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface BabyChecklistRepository extends JpaRepository<BabyChecklistEntity, Integer> {
+public interface BabyChecklistRepository extends JpaRepository<BabyChecklistEntity, Long> {
     Optional<BabyChecklistEntity> findByUserId(Long userId);
 }

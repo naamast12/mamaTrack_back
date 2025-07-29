@@ -13,6 +13,7 @@ public class BabyChecklistEntity {
     @Column(name = "user_id", nullable = true)
     private Long userId;
 
+    @Lob
     @Column(name = "items_status", columnDefinition = "jsonb")
     private String itemsStatus;
 

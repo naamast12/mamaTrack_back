@@ -19,6 +19,14 @@ public class BabyChecklistController {
         this.babyChecklistService = babyChecklistService;
     }
 
+    // 🔧 בדיקת תקינות של הקונטרולר
+    @GetMapping("/test")
+    public String test() {
+        System.out.println("🎯 Checklist controller loaded");
+        return "Checklist controller is working!";
+    }
+
+    // 🔄 שמירה
     @PostMapping
     public ResponseEntity<?> saveChecklist(@RequestBody Map<String, Object> body) {
         try {
@@ -38,6 +46,7 @@ public class BabyChecklistController {
         }
     }
 
+    // 📥 קבלת הרשימה למשתמש הנוכחי
     @GetMapping
     public ResponseEntity<?> getChecklist() {
         try {
@@ -62,6 +71,7 @@ public class BabyChecklistController {
         }
     }
 
+    // ♻️ איפוס הרשימה
     @PostMapping("/reset")
     public ResponseEntity<?> resetChecklist() {
         try {

@@ -1,17 +1,21 @@
 package com.ashcollege.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+// אופציונלי – כדי לא להחזיר null-ים
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WeeklyUpdate {
     private Integer week;
-    private Short trimester;                 // יכול להיות null ונחשב אוטומטית
-    private String fetalDevelopment;         // כמו ב-JSON
-    private String maternalChanges;          // כמו ב-JSON
+    private Short trimester;
+    private String fetalDevelopment;
+    private String maternalChanges;
     private List<String> symptoms;
     private List<String> nutrition;
-    private List<String> exercise;           // כמו ב-JSON
+    private List<String> exercise;
     private List<String> tips;
     private List<String> redFlags;
     private BabySize babySize;
@@ -52,15 +56,27 @@ public class WeeklyUpdate {
     public BabySize getBabySize() { return babySize; }
     public void setBabySize(BabySize babySize) { this.babySize = babySize; }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(Include.NON_NULL) // אופציונלי
     public static class BabySize {
         private String label;
+        private String emoji;     // ← חדש
+//        private String emojiAlt;  // ← אופציונלי, fallback
         private Double lengthCm;
         private Double weightGr;
 
         public String getLabel() { return label; }
         public void setLabel(String label) { this.label = label; }
+
+        public String getEmoji() { return emoji; }
+        public void setEmoji(String emoji) { this.emoji = emoji; }
+
+//        public String getEmojiAlt() { return emojiAlt; }
+//        public void setEmojiAlt(String emojiAlt) { this.emojiAlt = emojiAlt; }
+
         public Double getLengthCm() { return lengthCm; }
         public void setLengthCm(Double lengthCm) { this.lengthCm = lengthCm; }
+
         public Double getWeightGr() { return weightGr; }
         public void setWeightGr(Double weightGr) { this.weightGr = weightGr; }
     }

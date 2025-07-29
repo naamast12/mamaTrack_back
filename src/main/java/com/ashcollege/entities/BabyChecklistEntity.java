@@ -13,8 +13,8 @@ public class BabyChecklistEntity {
     @Column(name = "user_id", nullable = true)
     private Long userId;
 
-    @Lob
-    @Column(name = "items_status", columnDefinition = "jsonb")
+    @Column(name = "items_status", columnDefinition = "TEXT")
+    @org.hibernate.annotations.Type(type = "org.hibernate.type.TextType")
     private String itemsStatus;
 
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -62,23 +62,42 @@ public class ChatService {
         return lastDesc;
     }
 
+    // ה-OVERLOAD החדש: עם parentId (יכול להיות null)
     @Transactional
-    public ChatMessageEntity sendMessage(Long roomId, Long senderId, String body) {
+    public ChatMessageEntity sendMessage(Long roomId, Long senderId, String body, Long parentId) {
         if (body == null || body.trim().isEmpty()) {
             throw new IllegalArgumentException("message body is empty");
         }
+
         ChatRoomEntity room = roomRepo.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("room not found"));
 
-        // בדיקת הרשאה לכתיבה לפי קוד חדר וטרימסטר השולחת
+        // בדיקת הרשאה קיימת
         int trimester = calcUserTrimester(senderId);
-        assertRoomAccess(room, trimester); // 403 אם לא מורשה
+        assertRoomAccess(room, trimester);
 
         ChatMessageEntity msg = new ChatMessageEntity();
         msg.setRoom(room);
         msg.setSenderId(senderId);
         msg.setBody(body.trim());
+
+        // ↓ חדש: אם זו תגובה, נקשר להודעת-אם
+        if (parentId != null) {
+            ChatMessageEntity parent = msgRepo.findById(parentId)
+                    .orElseThrow(() -> new IllegalArgumentException("parent message not found"));
+            if (!parent.getRoom().getId().equals(roomId)) {
+                throw new IllegalArgumentException("parent message belongs to another room");
+            }
+            msg.setParent(parent);
+        }
+
         return msgRepo.save(msg);
+    }
+
+    // השארת המתודה הישנה לשמירה לאחור (כדי לא לשבור קריאות קיימות)
+    @Transactional
+    public ChatMessageEntity sendMessage(Long roomId, Long senderId, String body) {
+        return sendMessage(roomId, senderId, body, null);
     }
 
     private int normalizeLimit(Integer limit) {

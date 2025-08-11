@@ -31,6 +31,13 @@ public class ChatMessageEntity {
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
+
+    // ← חדש: הודעת-אם (null = הודעה ראשית / "פוסט")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_message_id")
+    private ChatMessageEntity parent;
+
+
     // getters/setters
     public Long getId() { return id; }
     public ChatRoomEntity getRoom() { return room; }
@@ -40,6 +47,15 @@ public class ChatMessageEntity {
     public String getBody() { return body; }
     public void setBody(String body) { this.body = body; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
+
+
+    // ← גטר/סטר חדשים
+    public ChatMessageEntity getParent() {
+        return parent;
+    }
+    public void setParent(ChatMessageEntity parent) {
+        this.parent = parent;
+    }
 
     @PrePersist
     public void prePersist() {

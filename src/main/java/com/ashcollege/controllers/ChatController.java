@@ -54,7 +54,7 @@ public class ChatController {
     public ResponseEntity<MessageDto> send(@PathVariable Long roomId,
                                            @RequestBody SendMessageReq req) {
         Long senderId = getCurrentUserId();     // ← מזהה שולחת לפי המייל שב‑JWT
-        ChatMessageEntity saved = chatService.sendMessage(roomId, senderId, req.getBody());
+        ChatMessageEntity saved = chatService.sendMessage(roomId, senderId, req.getBody(),req.getParentId());
         return new ResponseEntity<>(MessageDto.from(saved), HttpStatus.CREATED);
     }
 

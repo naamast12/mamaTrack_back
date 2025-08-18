@@ -191,6 +191,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -240,7 +241,7 @@ public class GeneralController {
 //            UserEntity user = userService.findByMail(mail);
 //
 //
-//// 🔍 הדפסות דיאגנוסטיות:
+    //// 🔍 הדפסות דיאגנוסטיות:
 //            System.out.println("✅ Saved Password = " + (user != null ? user.getPassword() : "null"));
 //            System.out.println("✅ Raw Password = " + rawPass);
 //            System.out.println("✅ Password Match = " +
@@ -300,9 +301,7 @@ public class GeneralController {
             }
 
             // שימוש נכון עם BASE64:
-            byte[] keyBytes = Decoders.BASE64.decode(secret);
-            SecretKey key = Keys.hmacShaKeyFor(keyBytes);
-
+            SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
             String token = Jwts.builder()
                     .setSubject(user.getMail())
                     .setIssuedAt(new Date())

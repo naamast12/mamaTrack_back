@@ -301,7 +301,9 @@ public class GeneralController {
             }
 
             // שימוש נכון עם BASE64:
-            SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+            byte[] keyBytes = Decoders.BASE64.decode(secret);
+            SecretKey key = Keys.hmacShaKeyFor(keyBytes);
+
             String token = Jwts.builder()
                     .setSubject(user.getMail())
                     .setIssuedAt(new Date())

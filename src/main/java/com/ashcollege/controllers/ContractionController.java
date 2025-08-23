@@ -42,13 +42,32 @@ public class ContractionController {
 
             dto.setUserId(user.getId());
             ContractionDto saved = contractionService.saveContraction(dto);
+            
+            // בדיקת כל סוגי הדפוסים
             boolean shouldGo = contractionService.shouldGoToHospital(user.getId());
+            boolean patternStarting = contractionService.isPatternStarting(user.getId());
+            boolean patternIrregular = contractionService.isPatternIrregular(user.getId());
+
+            // הודעה מפורשת למשתמש לפי הדפוס
+            String userMessage;
+            if (shouldGo) {
+                userMessage = "🚨 התראה: הצירים סדירים וחזקים! הגיע הזמן לצאת לבית חולים!";
+            } else if (patternStarting) {
+                userMessage = "⚠️ התראה: הצירים מתחילים להיות סדירים! התכונני לבית חולים!";
+            } else if (patternIrregular) {
+                userMessage = " מידע: הצירים לא סדירים עדיין. המשכי לעקוב אחר הדפוס";
+            } else {
+                userMessage = "✅ ציר נשמר בהצלחה. המשכי לעקוב אחר הצירים.";
+            }
 
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                     "success", true,
                     "message", "Contraction saved successfully",
                     "contraction", saved,
-                    "shouldGoToHospital", shouldGo
+                    "shouldGoToHospital", shouldGo,
+                    "patternStarting", patternStarting,
+                    "patternIrregular", patternIrregular,
+                    "userMessage", userMessage
             ));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(

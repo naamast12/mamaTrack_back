@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-
 @Service
 @Transactional
 public class UserService {
@@ -25,17 +24,11 @@ public class UserService {
     }
 
     public void registerUser(UserEntity user) {
-        // בדיקה אם המייל כבר קיים
         if (userRepository.existsByMail(user.getMail())) {
             throw new RuntimeException("המייל כבר קיים במערכת");
         }
-
-
-        // 🔐 קידוד הסיסמה
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-
-        user.updatePregnancyDetails(); // מחשב את תאריך הלידה ושבוע ההריון
+        user.updatePregnancyDetails();
         userRepository.save(user);
     }
 
@@ -47,10 +40,23 @@ public class UserService {
         return passwordEncoder.matches(rawPassword, storedPassword);
     }
 
+    @Transactional
     public void updateUser(UserEntity user) {
-        user.updatePregnancyDetails(); // מחשב מחדש אם תאריך הווסת השתנה
-        userRepository.save(user);
+        System.out.println("🔍 UserService.updateUser() נקרא");
+        System.out.println("🔍 משתמש ID: " + user.getId());
+        System.out.println("🔍 פרטים נוספים לשמירה:");
+        System.out.println("  - numberOfBirths: " + user.getNumberOfBirths());
+        System.out.println("  - babyGender: " + user.getBabyGender());
+        System.out.println("  - preferredHospital: " + user.getPreferredHospital());
+        System.out.println("  - healthInsurance: " + user.getHealthInsurance());
+
+        user.updatePregnancyDetails();
+
+        // שמירה עם flush מיידי
+        UserEntity saved = userRepository.saveAndFlush(user);
+        System.out.println("✅ UserService.updateUser() הושלם, ID: " + saved.getId());
     }
+
     public UserEntity getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated()) {
@@ -59,6 +65,4 @@ public class UserService {
         }
         return null;
     }
-
-
 }

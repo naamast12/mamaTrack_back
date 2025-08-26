@@ -18,7 +18,10 @@
         <property name="lastPeriodDate" column="lastPeriodDate" />
         <property name="estimatedDueDate" column="estimated_due_date" />
         <property name="pregnancyWeek" column="pregnancy_week" />
-
+        <property name="numberOfBirths"     column="number_of_births"/>
+        <property name="babyGender"          column="baby_gender"/>
+        <property name="preferredHospital"   column="preferred_hospital"/>
+        <property name="healthInsurance"     column="health_insurance"/>
 
     </class>
 

@@ -55,59 +55,81 @@ public class ContractionService {
 
     public boolean shouldGoToHospital(Long userId) {
         List<ContractionEntity> recent = contractionRepository.findByUserIdOrderByStartTimeDesc(userId);
-        if (recent.size() < 4) return false;
+        if (recent.size() < 8) return false;  // נשאר 8 צירים
+
+        List<ContractionEntity> lastEight = recent.subList(0, 8);
+
+        // בדיקה שכל הצירים ארוכים מספיק (45+ שניות)
+        boolean allLong = lastEight.stream().allMatch(c -> c.getDurationSeconds() >= 45);
+        
+        // בדיקה שהמרווחים תקינים (3-5 דקות)
+        boolean allIntervalsOk = true;
+        for (int i = 1; i < lastEight.size(); i++) {
+            long interval = java.time.Duration.between(
+                    lastEight.get(i).getStartTime(),
+                    lastEight.get(i - 1).getStartTime()
+            ).getSeconds();
+            // מרווח של 3-5 דקות (180-300 שניות)
+            if (interval < 180 || interval > 300) {
+                allIntervalsOk = false;
+                break;
+            }
+        }
+
+        // בדיקה שכל ה-8 צירים התרחשו בטווח של 30-45 דקות
+        long totalSpan = java.time.Duration.between(
+                lastEight.get(7).getStartTime(),  // הציר ה-1 (הישן ביותר)
+                lastEight.get(0).getStartTime()   // הציר ה-8 (החדש ביותר)
+        ).toMinutes();
+        boolean timeSpanOk = totalSpan <= 45;  // נשאר 45 דקות
+
+        return allLong && allIntervalsOk && timeSpanOk;
+    }
+
+        // בדיקה אם הצירים מתחילים להיות סדירים (4 צירים)
+    public boolean isPatternStarting(Long userId) {
+        List<ContractionEntity> recent = contractionRepository.findByUserIdOrderByStartTimeDesc(userId);
+        System.out.println("🔍 isPatternStarting - כמות צירים: " + recent.size());
+        
+        if (recent.size() < 4) {
+            System.out.println("❌ פחות מ-4 צירים");
+            return false;  // נשאר 4 צירים
+        }
 
         List<ContractionEntity> lastFour = recent.subList(0, 4);
 
-        boolean allLong = lastFour.stream().allMatch(c -> c.getDurationSeconds() > 45);
+        // בדיקה שכל הצירים ארוכים מספיק (45+ שניות)
+        boolean allLong = lastFour.stream().allMatch(c -> c.getDurationSeconds() >= 45);
+        System.out.println("🔍 allLong (45+ שניות): " + allLong);
+        
+        // בדיקה שהמרווחים תקינים (3-5 דקות)
         boolean allIntervalsOk = true;
         for (int i = 1; i < lastFour.size(); i++) {
             long interval = java.time.Duration.between(
                     lastFour.get(i).getStartTime(),
                     lastFour.get(i - 1).getStartTime()
             ).getSeconds();
+            System.out.println("🔍 מרווח " + i + ": " + interval + " שניות");
+            // מרווח של 3-5 דקות (180-300 שניות)
             if (interval < 180 || interval > 300) {
                 allIntervalsOk = false;
+                System.out.println("❌ מרווח לא תקין: " + interval + " שניות");
                 break;
             }
         }
+        System.out.println("🔍 allIntervalsOk (3-5 דקות): " + allIntervalsOk);
 
+        // בדיקה שכל ה-4 צירים התרחשו בטווח של 15-25 דקות
         long totalSpan = java.time.Duration.between(
-                lastFour.get(3).getStartTime(),
-                lastFour.get(0).getStartTime()
-        ).toMinutes();
-        boolean timeSpanOk = totalSpan <= 60;  // שינוי מ-30 ל-60 דקות
+                lastFour.get(3).getStartTime(),  // הציר ה-1 (הישן ביותר)
+                lastFour.get(0).getStartTime()   // הציר ה-4 (החדש ביותר)
+            ).toMinutes();
+        boolean timeSpanOk = totalSpan <= 25; // נשאר 25 דקות
+        System.out.println("🔍 totalSpan: " + totalSpan + " דקות, timeSpanOk: " + timeSpanOk);
 
-        return allLong && allIntervalsOk && timeSpanOk;
-    }
-
-    // בדיקה אם הצירים מתחילים להיות סדירים (3 צירים)
-    public boolean isPatternStarting(Long userId) {
-        List<ContractionEntity> recent = contractionRepository.findByUserIdOrderByStartTimeDesc(userId);
-        if (recent.size() < 3) return false;
-
-        List<ContractionEntity> lastThree = recent.subList(0, 3);
-
-        boolean allLong = lastThree.stream().allMatch(c -> c.getDurationSeconds() > 45);
-        boolean allIntervalsOk = true;
-        for (int i = 1; i < lastThree.size(); i++) {
-            long interval = java.time.Duration.between(
-                    lastThree.get(i).getStartTime(),
-                    lastThree.get(i - 1).getStartTime()
-            ).getSeconds();
-            if (interval < 180 || interval > 300) {
-                allIntervalsOk = false;
-                break;
-            }
-        }
-
-        long totalSpan = java.time.Duration.between(
-                lastThree.get(2).getStartTime(),
-                lastThree.get(0).getStartTime()
-        ).toMinutes();
-        boolean timeSpanOk = totalSpan <= 45; // 45 דקות ל-3 צירים
-
-        return allLong && allIntervalsOk && timeSpanOk;
+        boolean result = allLong && allIntervalsOk && timeSpanOk;
+        System.out.println("🔍 isPatternStarting result: " + result);
+        return result;
     }
 
     // בדיקה אם הצירים לא סדירים (2-3 צירים שלא עומדים בקריטריונים)
